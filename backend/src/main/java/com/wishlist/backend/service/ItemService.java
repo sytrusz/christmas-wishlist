@@ -31,6 +31,7 @@ public class ItemService {
                 .orElseThrow(() -> new RuntimeException("Wishlist not found"));
         
         WishlistItem item = new WishlistItem();
+        item.setDescription(itemDTO.getDescription());
         item.setItemName(itemDTO.getItemName());
         item.setShopLink(itemDTO.getShopLink());
         item.setWishlist(wishlist);
@@ -45,6 +46,7 @@ public class ItemService {
                 .orElseThrow(() -> new RuntimeException("Item not found"));
         
         item.setItemName(itemDTO.getItemName());
+        item.setDescription(itemDTO.getDescription());
         item.setShopLink(itemDTO.getShopLink());
         
         WishlistItem updated = itemRepository.save(item);
@@ -62,6 +64,7 @@ public class ItemService {
         ItemDTO dto = new ItemDTO();
         dto.setId(item.getId());
         dto.setItemName(item.getItemName());
+        dto.setDescription(item.getDescription());
         dto.setShopLink(item.getShopLink());
         dto.setWishlistId(item.getWishlist().getId());
         return dto;

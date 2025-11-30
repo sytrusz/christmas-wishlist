@@ -18,6 +18,9 @@ public class WishlistItem {
     @Column(nullable = false)
     private String itemName;
     
+    @Column(length = 300)
+    private String description;  // ADD THIS
+
     @Column(length = 1000)
     private String shopLink;
     

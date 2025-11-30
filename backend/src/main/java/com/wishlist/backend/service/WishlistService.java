@@ -59,6 +59,7 @@ public class WishlistService {
             for (ItemDTO itemDTO : request.getItems()) {
                 WishlistItem item = new WishlistItem();
                 item.setItemName(itemDTO.getItemName());
+                item.setDescription(itemDTO.getDescription());  // ADDED
                 item.setShopLink(itemDTO.getShopLink());
                 item.setWishlist(wishlist);
                 wishlist.getItems().add(item);
@@ -123,6 +124,7 @@ public class WishlistService {
         ItemDTO dto = new ItemDTO();
         dto.setId(item.getId());
         dto.setItemName(item.getItemName());
+        dto.setDescription(item.getDescription());  // ADDED
         dto.setShopLink(item.getShopLink());
         dto.setWishlistId(item.getWishlist().getId());
         return dto;
