@@ -1,5 +1,6 @@
 package com.wishlist.backend.repository;
 
+import com.wishlist.backend.model.User;
 import com.wishlist.backend.model.Wishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,5 +12,7 @@ import java.util.Optional;
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     Optional<Wishlist> findByUniqueSlug(String uniqueSlug);
     List<Wishlist> findByOwnerNameContainingIgnoreCase(String name);
+    List<Wishlist> findByCategory(User.UserCategory category);
+    List<Wishlist> findAllByOrderByCategoryAsc();
     boolean existsByUniqueSlug(String uniqueSlug);
 }

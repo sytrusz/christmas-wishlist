@@ -28,6 +28,10 @@ public class Wishlist {
     @Column(length = 1000)
     private String note;
     
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private User.UserCategory category;
+    
     @OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishlistItem> items = new ArrayList<>();
     

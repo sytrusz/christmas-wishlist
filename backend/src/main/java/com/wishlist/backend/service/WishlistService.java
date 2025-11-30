@@ -4,6 +4,7 @@ import com.wishlist.backend.dto.CreateWishlistRequest;
 import com.wishlist.backend.dto.ItemDTO;
 import com.wishlist.backend.dto.UpdateWishlistRequest;
 import com.wishlist.backend.dto.WishlistDTO;
+import com.wishlist.backend.model.User;
 import com.wishlist.backend.model.Wishlist;
 import com.wishlist.backend.model.WishlistItem;
 import com.wishlist.backend.repository.WishlistRepository;
@@ -22,7 +23,13 @@ public class WishlistService {
     private final WishlistRepository wishlistRepository;
     
     public List<WishlistDTO> getAllWishlists() {
-        return wishlistRepository.findAll().stream()
+        return wishlistRepository.findAllByOrderByCategoryAsc().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    
+    public List<WishlistDTO> getWishlistsByCategory(User.UserCategory category) {
+        return wishlistRepository.findByCategory(category).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -44,6 +51,7 @@ public class WishlistService {
         Wishlist wishlist = new Wishlist();
         wishlist.setOwnerName(request.getOwnerName());
         wishlist.setNote(request.getNote());
+        wishlist.setCategory(request.getCategory());
         wishlist.setUniqueSlug(generateUniqueSlug(request.getOwnerName()));
         
         // Add items
@@ -99,6 +107,7 @@ public class WishlistService {
         dto.setOwnerName(wishlist.getOwnerName());
         dto.setUniqueSlug(wishlist.getUniqueSlug());
         dto.setNote(wishlist.getNote());
+        dto.setCategory(wishlist.getCategory());
         dto.setCreatedAt(wishlist.getCreatedAt() != null ? wishlist.getCreatedAt().toString() : null);
         dto.setUpdatedAt(wishlist.getUpdatedAt() != null ? wishlist.getUpdatedAt().toString() : null);
         

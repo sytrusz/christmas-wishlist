@@ -3,6 +3,7 @@ package com.wishlist.backend.controller;
 import com.wishlist.backend.dto.CreateWishlistRequest;
 import com.wishlist.backend.dto.UpdateWishlistRequest;
 import com.wishlist.backend.dto.WishlistDTO;
+import com.wishlist.backend.model.User;
 import com.wishlist.backend.service.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,11 @@ public class WishlistController {
     @GetMapping
     public ResponseEntity<List<WishlistDTO>> getAllWishlists() {
         return ResponseEntity.ok(wishlistService.getAllWishlists());
+    }
+    
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<WishlistDTO>> getWishlistsByCategory(@PathVariable User.UserCategory category) {
+        return ResponseEntity.ok(wishlistService.getWishlistsByCategory(category));
     }
     
     @GetMapping("/{slug}")
