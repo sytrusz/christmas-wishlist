@@ -284,7 +284,7 @@ export default function CreateWishlistPage() {
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">
-                          Shop Link
+                          Shop Link (Optional)
                         </label>
                         <input
                           type="url"
