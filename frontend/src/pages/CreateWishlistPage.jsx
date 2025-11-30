@@ -161,16 +161,30 @@ export default function CreateWishlistPage() {
                 </p>
               </div>
 
+              {/* Note Field */}
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700">
+                  Note (Optional)
+                </label>
+                <textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="w-full border-2 border-gray-300 rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="Add any special notes or preferences..."
+                  rows={3}
+                />
+              </div>
+
               {/* Items Table */}
               <div>
-                <div className="flex justify-between items-center mb-3">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
                   <label className="block text-sm font-semibold text-gray-700">
                     Wishlist Items *
                   </label>
                   <button
                     type="button"
                     onClick={handleAddItem}
-                    className="bg-green-600 text-white px-4 py-2 text-sm font-semibold hover:bg-green-700 flex items-center gap-1"
+                    className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 text-sm font-semibold hover:bg-green-700 flex items-center justify-center gap-1"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -190,20 +204,88 @@ export default function CreateWishlistPage() {
                   </button>
                 </div>
 
-                <div className="border-2 border-gray-300 overflow-x-auto">
+                {/* Mobile: Stack view, Desktop: Table view */}
+                <div className="space-y-3 md:hidden">
+                  {/* Mobile View - Cards */}
+                  {items.map((item, index) => (
+                    <div key={index} className="border-2 border-gray-300 p-4 space-y-3">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-semibold text-gray-700">Item {index + 1}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveItem(index)}
+                          disabled={items.length === 1}
+                          className="text-red-600 hover:text-red-800 disabled:text-gray-300 disabled:cursor-not-allowed"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                          Item Name
+                        </label>
+                        <input
+                          type="text"
+                          value={item.itemName}
+                          onChange={(e) => handleItemChange(index, 'itemName', e.target.value)}
+                          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                          placeholder="e.g., Bag"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                          Description
+                        </label>
+                        <input
+                          type="text"
+                          value={item.description}
+                          onChange={(e) => handleItemChange(index, 'description', e.target.value)}
+                          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                          placeholder="e.g., color blue"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                          Shop Link
+                        </label>
+                        <input
+                          type="url"
+                          value={item.shopLink}
+                          onChange={(e) => handleItemChange(index, 'shopLink', e.target.value)}
+                          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                          placeholder="https://..."
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop View - Table */}
+                <div className="hidden md:block border-2 border-gray-300 overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-100">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700" style={{ minWidth: '180px' }}>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                           Item Name
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700" style={{ minWidth: '180px' }}>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                           Description
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700" style={{ minWidth: '200px' }}>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                           Shop Link
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700" style={{ width: '80px' }}>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">
                           Action
                         </th>
                       </tr>
@@ -215,9 +297,7 @@ export default function CreateWishlistPage() {
                             <input
                               type="text"
                               value={item.itemName}
-                              onChange={(e) =>
-                                handleItemChange(index, 'itemName', e.target.value)
-                              }
+                              onChange={(e) => handleItemChange(index, 'itemName', e.target.value)}
                               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                               placeholder="e.g., Bag"
                             />
@@ -226,9 +306,7 @@ export default function CreateWishlistPage() {
                             <input
                               type="text"
                               value={item.description}
-                              onChange={(e) =>
-                                handleItemChange(index, 'description', e.target.value)
-                              }
+                              onChange={(e) => handleItemChange(index, 'description', e.target.value)}
                               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                               placeholder="e.g., color blue"
                             />
@@ -237,9 +315,7 @@ export default function CreateWishlistPage() {
                             <input
                               type="url"
                               value={item.shopLink}
-                              onChange={(e) =>
-                                handleItemChange(index, 'shopLink', e.target.value)
-                              }
+                              onChange={(e) => handleItemChange(index, 'shopLink', e.target.value)}
                               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                               placeholder="https://..."
                             />
@@ -250,7 +326,6 @@ export default function CreateWishlistPage() {
                               onClick={() => handleRemoveItem(index)}
                               disabled={items.length === 1}
                               className="text-red-600 hover:text-red-800 disabled:text-gray-300 disabled:cursor-not-allowed"
-                              title="Delete Item"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -273,28 +348,16 @@ export default function CreateWishlistPage() {
                 </div>
               </div>
 
-              {/* Note */}
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-700">
-                  Note (Optional)
-                </label>
-                <textarea
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  rows="3"
-                  placeholder="e.g., Naa sa metro, sm "
-                />
-              </div>
-
               {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-red-600 text-white font-bold py-3 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed border-2 border-gray-800 shadow-lg"
-              >
-                {loading ? 'Creating...' : 'Create Wishlist'}
-              </button>
+              <div className="flex justify-end pt-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-red-600 text-white px-8 py-3 font-semibold hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Creating...' : 'Create Wishlist'}
+                </button>
+              </div>
             </form>
           )}
         </div>

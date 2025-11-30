@@ -51,53 +51,55 @@ export default function HomePage() {
     if (categoryWishlists.length === 0) return null;
 
     return (
-      <div className="mb-12">
-        <div className="flex items-center gap-3 mb-6">
-          <span className="text-4xl">{emoji}</span>
-          <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
+      <div className="mb-8 md:mb-12">
+        <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+          <span className="text-2xl md:text-4xl">{emoji}</span>
+          <h2 className="text-xl md:text-3xl font-bold text-gray-900">{title}</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {categoryWishlists.map((wishlist) => (
             <WishlistCard key={wishlist.id} wishlist={wishlist} />
           ))}
         </div>
-        <div className="mt-8 border-t-2 border-gray-300"></div>
+        <div className="mt-6 md:mt-8 border-t-2 border-gray-300"></div>
       </div>
     );
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-lg md:text-xl text-gray-600">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-green-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-green-50 py-4 md:py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-gray-900 mb-2">
-            🎄 Malagapo - Christmas Wishlist🎄
+        <div className="text-center mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-5xl font-bold text-gray-900 mb-2 leading-tight">
+            🎄 Malagapo - Christmas Wishlist 🎄
           </h1>
-          <p className="text-gray-600">Share your wishlist na oy, kay sila ra ang walay choice kundi mo-buy</p>
+          <p className="text-sm md:text-base text-gray-600 px-4">
+            Share your wishlist na oy, kay sila ra ang walay choice kundi mo-buy
+          </p>
         </div>
 
-{/* Search and Add Buttons */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-12">
+        {/* Search and Add Buttons */}
+        <div className="flex flex-col gap-3 md:gap-4 mb-8 md:mb-12">
           <SearchBar onSearch={handleSearch} />
 
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full">
             {/* Register Name Button */}
             <button
               onClick={() => navigate('/register')}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 flex items-center gap-2 transition-colors border-2 border-gray-800 shadow-lg whitespace-nowrap"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 md:px-6 flex items-center justify-center gap-2 transition-colors border-2 border-gray-800 shadow-lg text-sm md:text-base"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-5 w-5 md:h-6 md:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -106,7 +108,7 @@ export default function HomePage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M5 12h14M12 5l7 7-7 7"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
               Register Name
@@ -115,11 +117,11 @@ export default function HomePage() {
             {/* Create Wishlist Button */}
             <button
               onClick={() => navigate('/create')}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 flex items-center gap-2 transition-colors border-2 border-gray-800 shadow-lg whitespace-nowrap"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 md:px-6 flex items-center justify-center gap-2 transition-colors border-2 border-gray-800 shadow-lg text-sm md:text-base"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-5 w-5 md:h-6 md:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -138,7 +140,7 @@ export default function HomePage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm md:text-base">
             {error}
           </div>
         )}
@@ -146,7 +148,7 @@ export default function HomePage() {
         {/* Categories */}
         {filteredWishlists.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No wishlists found</p>
+            <p className="text-gray-500 text-base md:text-lg">No wishlists found</p>
           </div>
         ) : (
           <>

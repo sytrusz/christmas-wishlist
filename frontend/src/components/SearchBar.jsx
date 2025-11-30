@@ -10,13 +10,13 @@ export default function SearchBar({ onSearch }) {
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full">
       <input
         type="text"
         placeholder="Search wishlists by name..."
         value={searchTerm}
         onChange={handleSearch}
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+        className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm md:text-base"
       />
     </div>
   );
