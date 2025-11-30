@@ -11,9 +11,11 @@ export default function CreateWishlistPage() {
   const [items, setItems] = useState([{ itemName: '', description: '', shopLink: '' }]);
   const [loading, setLoading] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [existingWishlists, setExistingWishlists] = useState([]);
 
   useEffect(() => {
     fetchUsers();
+    fetchExistingWishlists();
   }, []);
 
   const fetchUsers = async () => {
@@ -28,6 +30,17 @@ export default function CreateWishlistPage() {
     }
   };
 
+  const fetchExistingWishlists = async () => {
+    try {
+      const response = await wishlistAPI.getAll();
+      // Extract owner names from existing wishlists
+      const ownerNames = response.data.map(w => w.ownerName);
+      setExistingWishlists(ownerNames);
+    } catch (err) {
+      console.error('Failed to load existing wishlists:', err);
+    }
+  };
+
   const handleUserSelect = (e) => {
     const userName = e.target.value;
     setSelectedUser(userName);
@@ -36,6 +49,13 @@ export default function CreateWishlistPage() {
     const user = users.find(u => u.fullName === userName);
     if (user) {
       setSelectedCategory(user.category);
+    }
+
+    // Check if user already has a wishlist
+    if (existingWishlists.includes(userName)) {
+      alert(`${userName} already has a wishlist. Each user can only create one wishlist.`);
+      setSelectedUser('');
+      return;
     }
   };
 
@@ -133,11 +153,18 @@ export default function CreateWishlistPage() {
                     required
                   >
                     <option value="">-- Select your name --</option>
-                    {users.map((user) => (
-                      <option key={user.id} value={user.fullName}>
-                        {user.fullName} ({user.category})
-                      </option>
-                    ))}
+                    {users.map((user) => {
+                      const hasWishlist = existingWishlists.includes(user.fullName);
+                      return (
+                        <option 
+                          key={user.id} 
+                          value={user.fullName}
+                          disabled={hasWishlist}
+                        >
+                          {user.fullName} ({user.category}) {hasWishlist ? '✓ Has wishlist' : ''}
+                        </option>
+                      );
+                    })}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
                     <svg
