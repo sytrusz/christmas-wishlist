@@ -8,8 +8,20 @@ export default function WishlistDetailPage() {
   const [wishlist, setWishlist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  
+  // Edit states
+  const [isEditingNote, setIsEditingNote] = useState(false);
+  const [isEditingInfo, setIsEditingInfo] = useState(false);
+  const [editingItemId, setEditingItemId] = useState(null);
+  
+  // Form data
   const [note, setNote] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [editingItemData, setEditingItemData] = useState({
+    itemName: '',
+    shopLink: ''
+  });
 
   useEffect(() => {
     fetchWishlist();
@@ -21,6 +33,8 @@ export default function WishlistDetailPage() {
       const response = await wishlistAPI.getBySlug(slug);
       setWishlist(response.data);
       setNote(response.data.note || '');
+      setTitle(response.data.title || '');
+      setDescription(response.data.description || '');
       setError(null);
     } catch (err) {
       setError('Wishlist not found');
@@ -33,10 +47,36 @@ export default function WishlistDetailPage() {
   const handleUpdateNote = async () => {
     try {
       await wishlistAPI.update(slug, { note });
-      setIsEditing(false);
+      setIsEditingNote(false);
       fetchWishlist();
     } catch (err) {
       alert('Failed to update note');
+    }
+  };
+
+  const handleUpdateInfo = async () => {
+    try {
+      await wishlistAPI.update(slug, { title, description });
+      setIsEditingInfo(false);
+      fetchWishlist();
+    } catch (err) {
+      alert('Failed to update wishlist info');
+    }
+  };
+
+  const handleAddItem = async () => {
+    if (!editingItemData.itemName.trim()) {
+      alert('Please enter an item name');
+      return;
+    }
+    
+    try {
+      await wishlistAPI.addItem(slug, editingItemData);
+      setEditingItemId(null);
+      setEditingItemData({ itemName: '', shopLink: '' });
+      fetchWishlist();
+    } catch (err) {
+      alert('Failed to add item');
     }
   };
 
@@ -48,6 +88,30 @@ export default function WishlistDetailPage() {
       } catch (err) {
         alert('Failed to delete wishlist');
       }
+    }
+  };
+
+  const startEditingItem = (item) => {
+    setEditingItemId(item.id);
+    setEditingItemData({
+      itemName: item.itemName,
+      shopLink: item.shopLink || ''
+    });
+  };
+
+  const cancelEditingItem = () => {
+    setEditingItemId(null);
+    setEditingItemData({ itemName: '', shopLink: '' });
+  };
+
+  const handleUpdateItem = async (itemId) => {
+    try {
+      await wishlistAPI.updateItem(itemId, editingItemData);
+      setEditingItemId(null);
+      setEditingItemData({ itemName: '', shopLink: '' });
+      fetchWishlist();
+    } catch (err) {
+      alert('Failed to update item');
     }
   };
 
@@ -111,12 +175,12 @@ export default function WishlistDetailPage() {
 
         {/* Wishlist Card */}
         <div className="bg-white border-2 border-gray-800 shadow-lg p-8">
-          {/* Header */}
+          {/* Header with Delete button */}
           <div className="flex justify-between items-start mb-6">
             <h1 className="text-4xl font-bold text-gray-900">{wishlist.ownerName}</h1>
             <button
               onClick={handleDeleteWishlist}
-              className="text-red-600 hover:text-red-800"
+              className="text-red-600 hover:text-red-800 p-2"
               title="Delete Wishlist"
             >
               <svg
@@ -138,45 +202,164 @@ export default function WishlistDetailPage() {
 
           {/* Items */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">Wishlist Items</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">Wishlist Items</h2>
+              <button
+                onClick={() => setEditingItemId('new')}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 flex items-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add Item
+              </button>
+            </div>
+
+            {/* Add New Item Form */}
+            {editingItemId === 'new' && (
+              <div className="border-2 border-green-500 p-4 mb-3 bg-green-50">
+                <h3 className="font-bold text-gray-900 mb-3">Add New Item</h3>
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={editingItemData.itemName}
+                    onChange={(e) => setEditingItemData({ ...editingItemData, itemName: e.target.value })}
+                    className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-500"
+                    placeholder="Item name"
+                  />
+                  <input
+                    type="url"
+                    value={editingItemData.shopLink}
+                    onChange={(e) => setEditingItemData({ ...editingItemData, shopLink: e.target.value })}
+                    className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-500"
+                    placeholder="Shop link (optional)"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleAddItem}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4"
+                    >
+                      Add Item
+                    </button>
+                    <button
+                      onClick={cancelEditingItem}
+                      className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {wishlist.items && wishlist.items.length > 0 ? (
               <div className="space-y-3">
                 {wishlist.items.map((item) => (
                   <div
                     key={item.id}
-                    className="border border-gray-300 p-4 flex justify-between items-start"
+                    className="border border-gray-300 p-4"
                   >
-                    <div className="flex-1">
-                      <p className="font-semibold text-lg text-gray-900">{item.itemName}</p>
-                      {item.shopLink && (
-                        <a
-                          href={item.shopLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline text-sm break-all"
-                        >
-                          {item.shopLink}
-                        </a>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleDeleteItem(item.id)}
-                      className="ml-4 text-red-600 hover:text-red-800"
-                      title="Delete Item"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clipRule="evenodd"
+                    {editingItemId === item.id ? (
+                      // Edit Mode
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          value={editingItemData.itemName}
+                          onChange={(e) => setEditingItemData({ ...editingItemData, itemName: e.target.value })}
+                          className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500"
+                          placeholder="Item name"
                         />
-                      </svg>
-                    </button>
+                        <input
+                          type="url"
+                          value={editingItemData.shopLink}
+                          onChange={(e) => setEditingItemData({ ...editingItemData, shopLink: e.target.value })}
+                          className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500"
+                          placeholder="Shop link"
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleUpdateItem(item.id)}
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={cancelEditingItem}
+                            className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      // View Mode
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <p className="font-semibold text-lg text-gray-900">{item.itemName}</p>
+                          {item.shopLink && (
+                            <a
+                              href={item.shopLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline text-sm break-all"
+                            >
+                              {item.shopLink}
+                            </a>
+                          )}
+                        </div>
+                        <div className="flex gap-2 ml-4">
+                          <button
+                            onClick={() => startEditingItem(item)}
+                            className="text-blue-600 hover:text-blue-800"
+                            title="Edit Item"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteItem(item.id)}
+                            className="text-red-600 hover:text-red-800"
+                            title="Delete Item"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -189,16 +372,16 @@ export default function WishlistDetailPage() {
           <div className="border-t-2 border-gray-200 pt-6">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-xl font-bold text-gray-800">Note</h3>
-              {!isEditing && (
+              {!isEditingNote && (
                 <button
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => setIsEditingNote(true)}
                   className="text-sm text-blue-600 hover:underline"
                 >
                   Edit
                 </button>
               )}
             </div>
-            {isEditing ? (
+            {isEditingNote ? (
               <div>
                 <textarea
                   value={note}
@@ -216,7 +399,7 @@ export default function WishlistDetailPage() {
                   </button>
                   <button
                     onClick={() => {
-                      setIsEditing(false);
+                      setIsEditingNote(false);
                       setNote(wishlist.note || '');
                     }}
                     className="bg-gray-300 text-gray-700 px-4 py-2 hover:bg-gray-400"
