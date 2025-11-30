@@ -93,7 +93,7 @@ Frontend starts on `http://localhost:5173`
 
 ## 📄 License
 
-
+MIT License
 
 ---
 
