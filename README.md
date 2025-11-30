@@ -1,4 +1,4 @@
-# 🎁 Wishlist
+# 🎁 Wishlist Web App
 
 A web application for Christmas wishlists for family and friends.
 
@@ -93,7 +93,7 @@ Frontend starts on `http://localhost:5173`
 
 ## 📄 License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
