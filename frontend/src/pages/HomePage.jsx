@@ -80,10 +80,10 @@ export default function HomePage() {
         {/* Header */}
         <div className="text-center mb-6 md:mb-8">
           <h1 className="text-2xl md:text-5xl font-bold text-gray-900 mb-2 leading-tight">
-            🎄 Malagapo - Christmas Wishlist 🎄
+            🎄Malagapo Christmas Wishlist🎄
           </h1>
           <p className="text-sm md:text-base text-gray-600 px-4">
-            Share your wishlist na oy, kay sila ra ang walay choice kundi mo-buy
+            Tis’ the season… to politely ask for gifts.
           </p>
         </div>
 
