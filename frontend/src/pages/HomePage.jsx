@@ -80,9 +80,9 @@ export default function HomePage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold text-gray-900 mb-2">
-            🎄 MALAGAPO CHRISTMAS WISHLIST🎄
+            🎄 Malagapo - Christmas Wishlist🎄
           </h1>
-          <p className="text-gray-600">Share your Christmas wishes with loved ones</p>
+          <p className="text-gray-600">Share your wishlist na oy, kay sila ra ang walay choice kundi mo-buy</p>
         </div>
 
 {/* Search and Add Buttons */}
@@ -150,8 +150,8 @@ export default function HomePage() {
           </div>
         ) : (
           <>
-            <CategorySection title="Adults" category="ADULT" emoji="👨" />
-            <CategorySection title="Kids" category="KID" emoji="👶" />
+            <CategorySection title="Adults" category="ADULT" emoji="👦🏻" />
+            <CategorySection title="Kids" category="KID" emoji="👶🏻" />
             <CategorySection title="Pets" category="PET" emoji="🐾" />
           </>
         )}

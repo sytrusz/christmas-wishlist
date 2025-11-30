@@ -8,7 +8,7 @@ export default function CreateWishlistPage() {
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [note, setNote] = useState('');
-  const [items, setItems] = useState([{ itemName: '', shopLink: '' }]);
+  const [items, setItems] = useState([{ itemName: '', description: '', shopLink: '' }]);
   const [loading, setLoading] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(true);
 
@@ -40,7 +40,7 @@ export default function CreateWishlistPage() {
   };
 
   const handleAddItem = () => {
-    setItems([...items, { itemName: '', shopLink: '' }]);
+    setItems([...items, { itemName: '', description: '', shopLink: '' }]);
   };
 
   const handleRemoveItem = (index) => {
@@ -89,7 +89,7 @@ export default function CreateWishlistPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-green-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Back Button */}
         <button
           onClick={() => navigate('/')}
@@ -190,17 +190,20 @@ export default function CreateWishlistPage() {
                   </button>
                 </div>
 
-                <div className="border-2 border-gray-300 overflow-hidden">
+                <div className="border-2 border-gray-300 overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-100">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-2/5">
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700" style={{ minWidth: '180px' }}>
                           Item Name
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-2/5">
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700" style={{ minWidth: '180px' }}>
+                          Description
+                        </th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700" style={{ minWidth: '200px' }}>
                           Shop Link
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 w-1/5">
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700" style={{ width: '80px' }}>
                           Action
                         </th>
                       </tr>
@@ -216,7 +219,18 @@ export default function CreateWishlistPage() {
                                 handleItemChange(index, 'itemName', e.target.value)
                               }
                               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                              placeholder="e.g., Bottle, Pencil"
+                              placeholder="e.g., Bag"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="text"
+                              value={item.description}
+                              onChange={(e) =>
+                                handleItemChange(index, 'description', e.target.value)
+                              }
+                              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                              placeholder="e.g., color blue"
                             />
                           </td>
                           <td className="px-4 py-3">
@@ -269,7 +283,7 @@ export default function CreateWishlistPage() {
                   onChange={(e) => setNote(e.target.value)}
                   className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                   rows="3"
-                  placeholder="e.g., PLS COLOR BLUE"
+                  placeholder="e.g., Naa sa metro, sm "
                 />
               </div>
 

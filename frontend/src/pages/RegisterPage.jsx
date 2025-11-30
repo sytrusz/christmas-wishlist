@@ -72,17 +72,17 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Full Name */}
+            {/* Name */}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Full Name *
+                Name *
               </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full border-2 border-gray-300 rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
-                placeholder="Enter your full name"
+                placeholder="Enter your name"
                 required
               />
             </div>

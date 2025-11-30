@@ -20,6 +20,7 @@ export default function WishlistDetailPage() {
   const [description, setDescription] = useState('');
   const [editingItemData, setEditingItemData] = useState({
     itemName: '',
+    description: '',
     shopLink: ''
   });
 
@@ -73,7 +74,7 @@ export default function WishlistDetailPage() {
     try {
       await wishlistAPI.addItem(slug, editingItemData);
       setEditingItemId(null);
-      setEditingItemData({ itemName: '', shopLink: '' });
+      setEditingItemData({ itemName: '', description: '', shopLink: '' });
       fetchWishlist();
     } catch (err) {
       alert('Failed to add item');
@@ -95,20 +96,21 @@ export default function WishlistDetailPage() {
     setEditingItemId(item.id);
     setEditingItemData({
       itemName: item.itemName,
+      description: item.description || '',
       shopLink: item.shopLink || ''
     });
   };
 
   const cancelEditingItem = () => {
     setEditingItemId(null);
-    setEditingItemData({ itemName: '', shopLink: '' });
+    setEditingItemData({ itemName: '', description: '', shopLink: '' });
   };
 
   const handleUpdateItem = async (itemId) => {
     try {
       await wishlistAPI.updateItem(itemId, editingItemData);
       setEditingItemId(null);
-      setEditingItemData({ itemName: '', shopLink: '' });
+      setEditingItemData({ itemName: '', description: '', shopLink: '' });
       fetchWishlist();
     } catch (err) {
       alert('Failed to update item');
@@ -238,6 +240,13 @@ export default function WishlistDetailPage() {
                     className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-500"
                     placeholder="Item name"
                   />
+                  <textarea
+                    value={editingItemData.description}
+                    onChange={(e) => setEditingItemData({ ...editingItemData, description: e.target.value })}
+                    className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-500"
+                    placeholder="Description (e.g., color blue, size M)"
+                    rows="2"
+                  />
                   <input
                     type="url"
                     value={editingItemData.shopLink}
@@ -280,6 +289,13 @@ export default function WishlistDetailPage() {
                           className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500"
                           placeholder="Item name"
                         />
+                        <textarea
+                          value={editingItemData.description}
+                          onChange={(e) => setEditingItemData({ ...editingItemData, description: e.target.value })}
+                          className="w-full border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500"
+                          placeholder="Description (e.g., color blue, size M)"
+                          rows="2"
+                        />
                         <input
                           type="url"
                           value={editingItemData.shopLink}
@@ -307,14 +323,19 @@ export default function WishlistDetailPage() {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <p className="font-semibold text-lg text-gray-900">{item.itemName}</p>
+                          {item.description && (
+                            <p className="text-gray-600 text-sm mt-2 mb-2 whitespace-pre-wrap">
+                              📝 {item.description}
+                            </p>
+                          )}
                           {item.shopLink && (
                             <a
                               href={item.shopLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline text-sm break-all"
+                              className="text-blue-600 hover:underline text-sm break-all block"
                             >
-                              {item.shopLink}
+                              🔗 {item.shopLink}
                             </a>
                           )}
                         </div>
