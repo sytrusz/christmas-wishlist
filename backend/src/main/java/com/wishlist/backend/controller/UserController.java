@@ -1,6 +1,7 @@
 package com.wishlist.backend.controller;
 
 import com.wishlist.backend.dto.RegisterUserRequest;
+import com.wishlist.backend.dto.UpdateUserRequest;
 import com.wishlist.backend.dto.UserDTO;
 import com.wishlist.backend.model.User;
 import com.wishlist.backend.service.UserService;
@@ -32,6 +33,11 @@ public class UserController {
     public ResponseEntity<UserDTO> registerUser(@RequestBody RegisterUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.registerUser(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+        return ResponseEntity.ok(userService.updateUser(id, request));
     }
     
     @DeleteMapping("/{id}")

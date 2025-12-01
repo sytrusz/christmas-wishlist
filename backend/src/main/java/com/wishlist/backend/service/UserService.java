@@ -1,6 +1,7 @@
 package com.wishlist.backend.service;
 
 import com.wishlist.backend.dto.RegisterUserRequest;
+import com.wishlist.backend.dto.UpdateUserRequest;
 import com.wishlist.backend.dto.UserDTO;
 import com.wishlist.backend.model.User;
 import com.wishlist.backend.repository.UserRepository;
@@ -42,6 +43,24 @@ public class UserService {
         
         User saved = userRepository.save(user);
         return convertToDTO(saved);
+    }
+
+    @Transactional
+    public UserDTO updateUser(Long userId, UpdateUserRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check for name duplicate
+        if (!user.getFullName().equals(request.getFullName()) &&
+            userRepository.existsByFullName(request.getFullName())) {
+            throw new RuntimeException("Another user with this name already exists");
+        }
+
+        user.setFullName(request.getFullName());
+        user.setCategory(request.getCategory());
+
+        User updated = userRepository.save(user);
+        return convertToDTO(updated);
     }
     
     @Transactional
