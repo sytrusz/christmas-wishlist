@@ -17,7 +17,7 @@ export default function LoadingSpinner() {
           Loading your wishlists...
         </p>
         <p className="text-sm md:text-base text-gray-600">
-          Please wait. The backend is waking up ☕
+          Please wait. The system is waking up ☕
         </p>
         
         {/* Progress dots */}
