@@ -221,17 +221,18 @@ export default function HomePage() {
       )}
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-red-900 via-emerald-900 to-green-900 text-white py-6 md:py-8 px-4 mt-12 border-t-4 border-gray-800">
+      <footer className="bg-gradient-to-r from-red-900 via-emerald-900 to-green-900 text-white py-8 px-4 mt-12 border-t-4 border-gray-800">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            
             {/* Left - Credits */}
-            <div className="text-center md:text-left">
-              <p className="text-sm md:text-base font-semibold mb-3">
+            <div className="flex flex-col gap-7 text-center md:text-left">
+              <p className="text-sm md:text-base font-semibold text-white/90">
                 Created by: Nathan Rener Malagapo
               </p>
               
               {/* Social Links */}
-              <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex flex-row justify-center md:justify-start items-center gap-4">
                 {/* GitHub */}
                 <a
                   href="https://github.com/sytrusz"
@@ -271,7 +272,7 @@ export default function HomePage() {
             </div>
 
             {/* Right - Repository Link */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-4">
               <a
                 href="https://github.com/sytrusz/christmas-wishlist"
                 target="_blank"
@@ -302,23 +303,6 @@ export default function HomePage() {
                   LOG IN AS ADMIN
                 </button>
               </div>
-            </div>
-          </div>
-
-          {/* Bottom - Tech Stack */}
-          <div className="mt-6 pt-4 border-t border-white/20 text-center">
-            <p className="text-xs md:text-sm text-gray-300 mb-2">
-              Developed using:
-            </p>
-            <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-              {['Spring Boot', 'React', 'MySQL', 'Tailwind CSS'].map((tech) => (
-                <span
-                  key={tech}
-                  className="bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-xs md:text-sm font-medium"
-                >
-                  {tech}
-                </span>
-              ))}
             </div>
           </div>
         </div>
