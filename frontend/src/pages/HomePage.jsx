@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { wishlistAPI } from '../services/api';
+import { wishlistAPI, settingsAPI } from '../services/api';
 import WishlistCard from '../components/WishlistCard';
 import SearchBar from '../components/SearchBar';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -13,11 +13,12 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [headerName, setHeaderName] = useState('Christmas Wishlist');
 
   useEffect(() => {
     fetchWishlists();
+    loadHeaderName();
     
-    // Scroll to top button visibility
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
@@ -25,6 +26,15 @@ export default function HomePage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const loadHeaderName = async () => {
+    try {
+      const response = await settingsAPI.getHeader();
+      setHeaderName(response.data.value);
+    } catch (err) {
+      console.error("Failed to load header, using default", err);
+    }
+  };
 
   const fetchWishlists = async () => {
     try {
@@ -103,7 +113,7 @@ export default function HomePage() {
           {/* Header */}
           <div className="text-center mb-6 md:mb-8 animate-fade-in">
             <h1 className="text-2xl md:text-5xl font-bold text-gray-900 mb-2 leading-tight">
-              🎄 Malagapo Christmas Wishlist 🎄
+              🎄 {headerName} 🎄
             </h1>
             <p className="text-sm md:text-base text-gray-600 px-4">
               Tis' the season… to politely ask for gifts.
@@ -279,8 +289,18 @@ export default function HomePage() {
                 <span className="text-sm md:text-base">View Source Code</span>
               </a>
               
-              <div className="text-xs md:text-sm text-gray-300">
-                © {new Date().getFullYear()} • All Rights Reserved
+              <div className="flex flex-col items-center">
+                <div className="text-xs md:text-sm text-gray-300">
+                  © {new Date().getFullYear()} • All Rights Reserved
+                </div>
+                
+                {/* Admin/User Login Link */}
+                <button
+                  onClick={() => navigate('/login')}
+                  className="mt-2 text-[10px] text-white/40 hover:text-white uppercase tracking-widest transition-colors font-medium"
+                >
+                  LOG IN AS ADMIN
+                </button>
               </div>
             </div>
           </div>

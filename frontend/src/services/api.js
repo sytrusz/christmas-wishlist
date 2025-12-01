@@ -9,24 +9,73 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use(
+  (config) => {
+    // Retrieve the encoded credentials saved during login
+    const token = sessionStorage.getItem('auth_token');
+    if (token) {
+      config.headers['Authorization'] = `Basic ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export const authAPI = {
+  login: async (username, password) => {
+    const token = btoa(`${username}:${password}`);
+    try {
+      await api.get('/users', {
+        headers: { Authorization: `Basic ${token}` }
+      });
+      
+      // If successful, save state
+      sessionStorage.setItem('auth_token', token);
+      sessionStorage.setItem('isAuthenticated', 'true');
+      if (username === 'admin') {
+        sessionStorage.setItem('isAdmin', 'true');
+      }
+      return true;
+    } catch (error) {
+      console.error("Login failed", error);
+      return false;
+    }
+  },
+  logout: () => {
+    sessionStorage.clear();
+    window.location.href = '/login';
+  }
+};
+
 export const userAPI = {
   getAll: () => api.get('/users'),
   getByCategory: (category) => api.get(`/users/category/${category}`),
   register: (data) => api.post('/users/register', data),
+  update: (id, data) => api.put(`/users/${id}`, data),
   delete: (id) => api.delete(`/users/${id}`),
 };
 
 export const wishlistAPI = {
   getAll: () => api.get('/wishlists'),
-  getByCategory: (category) => api.get(`/wishlists/category/${category}`),
   getBySlug: (slug) => api.get(`/wishlists/${slug}`),
-  search: (name) => api.get(`/wishlists/search?name=${name}`),
+  getByCategory: (category) => api.get(`/wishlists/category/${category}`),
+  search: (name) => api.get('/wishlists/search', { params: { name } }),
   create: (data) => api.post('/wishlists', data),
   update: (slug, data) => api.put(`/wishlists/${slug}`, data),
-  delete: (slug) => api.delete(`/wishlists/${slug}`),
-  addItem: (slug, item) => api.post(`/wishlists/${slug}/items`, item),
-  updateItem: (itemId, item) => api.put(`/items/${itemId}`, item),
-  deleteItem: (itemId) => api.delete(`/items/${itemId}`),
+  delete: (id) => api.delete(`/wishlists/${id}`),
+};
+
+export const itemAPI = {
+  add: (slug, data) => api.post(`/wishlists/${slug}/items`, data),
+  update: (id, data) => api.put(`/items/${id}`, data),
+  delete: (id) => api.delete(`/items/${id}`),
+};
+
+export const settingsAPI = {
+  getHeader: () => api.get('/settings/header'),
+  updateHeader: (value) => api.put('/settings/header', { value }),
 };
 
 export default api;
