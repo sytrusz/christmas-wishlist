@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { wishlistAPI } from '../services/api';
+import { wishlistAPI, itemAPI } from '../services/api';
 
 export default function WishlistDetailPage() {
   const { slug } = useParams();
@@ -8,16 +8,12 @@ export default function WishlistDetailPage() {
   const [wishlist, setWishlist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Edit states
+
   const [isEditingNote, setIsEditingNote] = useState(false);
-  const [isEditingInfo, setIsEditingInfo] = useState(false);
   const [editingItemId, setEditingItemId] = useState(null);
   
   // Form data
   const [note, setNote] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [editingItemData, setEditingItemData] = useState({
     itemName: '',
     description: '',
@@ -34,8 +30,6 @@ export default function WishlistDetailPage() {
       const response = await wishlistAPI.getBySlug(slug);
       setWishlist(response.data);
       setNote(response.data.note || '');
-      setTitle(response.data.title || '');
-      setDescription(response.data.description || '');
       setError(null);
     } catch (err) {
       setError('Wishlist not found');
@@ -47,21 +41,11 @@ export default function WishlistDetailPage() {
 
   const handleUpdateNote = async () => {
     try {
-      await wishlistAPI.update(slug, { note });
+      await wishlistAPI.update(slug, { ...wishlist, note });
       setIsEditingNote(false);
       fetchWishlist();
     } catch (err) {
       alert('Failed to update note');
-    }
-  };
-
-  const handleUpdateInfo = async () => {
-    try {
-      await wishlistAPI.update(slug, { title, description });
-      setIsEditingInfo(false);
-      fetchWishlist();
-    } catch (err) {
-      alert('Failed to update wishlist info');
     }
   };
 
@@ -72,11 +56,12 @@ export default function WishlistDetailPage() {
     }
     
     try {
-      await wishlistAPI.addItem(slug, editingItemData);
+      await itemAPI.add(slug, editingItemData);
       setEditingItemId(null);
       setEditingItemData({ itemName: '', description: '', shopLink: '' });
       fetchWishlist();
     } catch (err) {
+      console.error(err);
       alert('Failed to add item');
     }
   };
@@ -84,7 +69,7 @@ export default function WishlistDetailPage() {
   const handleDeleteWishlist = async () => {
     if (window.confirm('Are you sure you want to delete this wishlist?')) {
       try {
-        await wishlistAPI.delete(slug);
+        await wishlistAPI.delete(wishlist.id);
         navigate('/');
       } catch (err) {
         alert('Failed to delete wishlist');
@@ -108,7 +93,7 @@ export default function WishlistDetailPage() {
 
   const handleUpdateItem = async (itemId) => {
     try {
-      await wishlistAPI.updateItem(itemId, editingItemData);
+      await itemAPI.update(itemId, editingItemData);
       setEditingItemId(null);
       setEditingItemData({ itemName: '', description: '', shopLink: '' });
       fetchWishlist();
@@ -120,7 +105,7 @@ export default function WishlistDetailPage() {
   const handleDeleteItem = async (itemId) => {
     if (window.confirm('Delete this item?')) {
       try {
-        await wishlistAPI.deleteItem(itemId);
+        await itemAPI.delete(itemId);
         fetchWishlist();
       } catch (err) {
         alert('Failed to delete item');
@@ -179,7 +164,13 @@ export default function WishlistDetailPage() {
         <div className="bg-white border-2 border-gray-800 shadow-lg p-8">
           {/* Header with Delete button */}
           <div className="flex justify-between items-start mb-6">
-            <h1 className="text-4xl font-bold text-gray-900">{wishlist.ownerName}</h1>
+            <div>
+                <h1 className="text-4xl font-bold text-gray-900">{wishlist.ownerName}</h1>
+                <span className="inline-block mt-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                    {wishlist.category}
+                </span>
+            </div>
+            
             <button
               onClick={handleDeleteWishlist}
               className="text-red-600 hover:text-red-800 p-2"
@@ -230,7 +221,7 @@ export default function WishlistDetailPage() {
 
             {/* Add New Item Form */}
             {editingItemId === 'new' && (
-              <div className="border-2 border-green-500 p-4 mb-3 bg-green-50">
+              <div className="border-2 border-green-500 p-4 mb-3 bg-green-50 animate-fade-in">
                 <h3 className="font-bold text-gray-900 mb-3">Add New Item</h3>
                 <div className="space-y-3">
                   <input
@@ -277,7 +268,7 @@ export default function WishlistDetailPage() {
                 {wishlist.items.map((item) => (
                   <div
                     key={item.id}
-                    className="border border-gray-300 p-4"
+                    className="border border-gray-300 p-4 bg-gray-50 hover:bg-white transition-colors"
                   >
                     {editingItemId === item.id ? (
                       // Edit Mode
@@ -333,16 +324,16 @@ export default function WishlistDetailPage() {
                               href={item.shopLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline text-sm break-all block"
+                              className="text-blue-600 hover:underline text-sm break-all block mt-1"
                             >
-                              🔗 {item.shopLink}
+                              🔗 Shop Link
                             </a>
                           )}
                         </div>
                         <div className="flex gap-2 ml-4">
                           <button
                             onClick={() => startEditingItem(item)}
-                            className="text-blue-600 hover:text-blue-800"
+                            className="text-blue-600 hover:text-blue-800 p-1"
                             title="Edit Item"
                           >
                             <svg
@@ -362,7 +353,7 @@ export default function WishlistDetailPage() {
                           </button>
                           <button
                             onClick={() => handleDeleteItem(item.id)}
-                            className="text-red-600 hover:text-red-800"
+                            className="text-red-600 hover:text-red-800 p-1"
                             title="Delete Item"
                           >
                             <svg
@@ -385,7 +376,10 @@ export default function WishlistDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No items in this wishlist yet</p>
+              <div className="text-center py-8 bg-gray-50 border border-gray-200 border-dashed">
+                <p className="text-gray-500">No items in this wishlist yet</p>
+                <p className="text-sm text-gray-400 mt-1">Click "Add Item" to start!</p>
+              </div>
             )}
           </div>
 
@@ -396,43 +390,45 @@ export default function WishlistDetailPage() {
               {!isEditingNote && (
                 <button
                   onClick={() => setIsEditingNote(true)}
-                  className="text-sm text-blue-600 hover:underline"
+                  className="text-sm text-blue-600 hover:underline font-semibold"
                 >
-                  Edit
+                  Edit Note
                 </button>
               )}
             </div>
             {isEditingNote ? (
-              <div>
+              <div className="animate-fade-in">
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className="w-full border border-gray-300 rounded p-3 mb-3"
+                  className="w-full border-2 border-gray-300 p-3 mb-3 focus:ring-2 focus:ring-blue-500 rounded"
                   rows="3"
-                  placeholder="Add a note (e.g., PLS COLOR BLUE)"
+                  placeholder="Add a note (e.g., If option 1 is not available, go for option 2)..."
                 />
                 <div className="flex gap-2">
                   <button
                     onClick={handleUpdateNote}
-                    className="bg-green-600 text-white px-4 py-2 hover:bg-green-700"
+                    className="bg-green-600 text-white px-4 py-2 hover:bg-green-700 font-bold"
                   >
-                    Save
+                    Save Note
                   </button>
                   <button
                     onClick={() => {
                       setIsEditingNote(false);
                       setNote(wishlist.note || '');
                     }}
-                    className="bg-gray-300 text-gray-700 px-4 py-2 hover:bg-gray-400"
+                    className="bg-gray-300 text-gray-700 px-4 py-2 hover:bg-gray-400 font-bold"
                   >
                     Cancel
                   </button>
                 </div>
               </div>
             ) : (
-              <p className="text-gray-700 whitespace-pre-wrap">
-                {wishlist.note || 'No note added'}
-              </p>
+              <div className="bg-yellow-50 p-4 border border-yellow-200 rounded">
+                <p className="text-gray-800 whitespace-pre-wrap italic">
+                  {wishlist.note || 'No special notes added.'}
+                </p>
+              </div>
             )}
           </div>
         </div>

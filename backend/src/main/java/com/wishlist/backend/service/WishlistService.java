@@ -79,11 +79,11 @@ public class WishlistService {
         Wishlist updated = wishlistRepository.save(wishlist);
         return convertToDTO(updated);
     }
-    
+        
     @Transactional
-    public void deleteWishlist(String slug) {
-        Wishlist wishlist = wishlistRepository.findByUniqueSlug(slug)
-                .orElseThrow(() -> new RuntimeException("Wishlist not found"));
+    public void deleteWishlistById(Long id) {
+        Wishlist wishlist = wishlistRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Wishlist not found with id: " + id));
         wishlistRepository.delete(wishlist);
     }
     
