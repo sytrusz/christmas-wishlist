@@ -46,4 +46,9 @@ public class WishlistController {
         wishlistService.deleteWishlistById(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/health")
+    public String healthCheck() {
+        return "OK";
+    }
 }
