@@ -26,8 +26,8 @@ A web application for Christmas wishlists for family and friends. Perfect for **
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/wishlist.git
-cd wishlist/backend
+git clone https://github.com/sytrusz/christmas-wishlist
+cd wishlist/backend 
 ```
 
 2. Configure `application.properties`
