@@ -1,14 +1,17 @@
 # 🎁 Wishlist Web App
 
-A web application for Christmas wishlists for family and friends.
+A web application for Christmas wishlists for family and friends. Perfect for **Manito-Manita** or general exchange gifts!
 
 ## ✨ Features
 
-- **User Registration** - Family members can register with their name and category (Adults, Kids, Pets)
-- **Wishlist Creation** - Each user can create one personalized wishlist
-- **Item Management** - Add multiple items with descriptions and shop links
-- **Responsive Design** - Works seamlessly on desktop and mobile devices
-- **Category-based Organization** - Wishlists are automatically categorized by user type
+- **Secure Login** - Role-based authentication (User || Admin).
+- **Wishlist Wall** - View everyone's wishlist in one place.
+- **Smart Categories** - Automatically organizes lists by Adults 👨, Kids 👶, and Pets 🐾.
+- **Item Management** - Add specific items with descriptions (e.g., "Size M", "Color Blue") and direct shop links.
+- **Admin Dashboard** - Overview of all registered users and active wishlists.
+- **Admin User Management** - Create, Edit, or Delete users directly.
+- **Admin Content Control** - Monitor and delete wishlists if needed.
+- **Global Site Settings** - Update the **Homepage Header Title** (e.g., change "Christmas 2025" to "Family Reunion") directly from the dashboard.
 
 ## 🏗️ Architecture
 
@@ -18,15 +21,6 @@ A web application for Christmas wishlists for family and friends.
 **Styling**: Tailwind CSS
 
 ## 🚀 Getting Started
-
-### Prerequisites
-
-**Backend:**
-- Springboot (Java 17, Maven)
-- MySQL 8.0+
-
-**Frontend:**
-- Vite + ReactJS
 
 ### Backend Setup
 
@@ -38,16 +32,19 @@ cd wishlist/backend
 
 2. Configure `application.properties`
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/wishlist_db
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=${DATABASE_URL}
+spring.datasource.username=${DB_USERNAME:root}
+spring.datasource.password=${DB_PASSWORD}
+
+USER_PASSWORD=${APP_USER_PASSWORD:user}
+ADMIN_PASSWORD=${APP_ADMIN_PASSWORD:admin}
+
+cors.allowed-origins=${ALLOWED_ORIGINS:http://localhost:5173}
 ```
 
 3. Run
 ```bash
-mvn clean install
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 Backend starts on `http://localhost:8080`
@@ -56,7 +53,7 @@ Backend starts on `http://localhost:8080`
 
 1. Navigate to frontend
 ```bash
-cd wishlist/frontend
+cd frontend
 ```
 
 2. Install dependencies
@@ -78,18 +75,23 @@ Frontend starts on `http://localhost:5173`
 
 ## 📝 Usage
 
-### Creating a Wishlist
+### For Users
+1. Login: Use the password provided by the host.
+2. Register Name: Click "Register Name" to add your name.
 
+### For Admin
+1. **Login:**
+   - Toggle the "Login as Admin" switch and enter the admin password.
+3. **Dashboard Controls**
+   - **Users Tab:** Add new family members manually or edit existing profiles.
+   - **Wishlists Tab:** Monitor all active lists and delete specific ones if needed.
+   - **Settings Tab:** Update the **Header Name** of the website globally (e.g., change "Christmas" to "Manito-Manita").
+
+### Creating a Wishlist
 1. Click "Create Wishlist"
 2. Select your name
 3. Add items (name required, description and link optional)
 4. Submit
-
-### Registering a New User
-
-1. Click "Register here"
-2. Enter full name and category
-3. Submit
 
 ## 📄 License
 
