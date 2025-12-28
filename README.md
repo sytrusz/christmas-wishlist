@@ -76,8 +76,11 @@ Frontend starts on `http://localhost:5173`
 ## 📝 Usage
 
 ### For Users
-1. Login: Use the password provided by the host.
-2. Register Name: Click "Register Name" to add your name.
+1. **Login**: Sign in using the password provided by the host.
+
+   * **Password**: `user`
+2. **Register Name**: Click **"Register Name"** to add your name.
+
 
 ### For Admin
 1. **Login:**
