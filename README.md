@@ -1,100 +1,82 @@
-# 🎁 Wishlist Web App
+# Wishlist Web App
 
-A web application for Christmas wishlists for family and friends. Perfect for **Manito-Manita** or general exchange gifts!
+A web application for organizing gift wishlists and gift exchanges (Manito-Manita).
 
-## ✨ Features
+## Features
 
-- **Secure Login** - Role-based authentication (User || Admin).
-- **Wishlist Wall** - View everyone's wishlist in one place.
-- **Smart Categories** - Automatically organizes lists by Adults 👨, Kids 👶, and Pets 🐾.
+- **Role-Based Access** - User and Admin authentication modes.
+- **Wishlist Wall** - Centralized dashboard displaying wishlists categorized by group.
+- **Categories** - Oganized list by customizable categories (Adults 👨, Kids 👶, Pets 🐾).
 - **Item Management** - Add specific items with descriptions (e.g., "Size M", "Color Blue") and direct shop links.
-- **Admin Dashboard** - Overview of all registered users and active wishlists.
-- **Admin User Management** - Create, Edit, or Delete users directly.
-- **Admin Content Control** - Monitor and delete wishlists if needed.
-- **Global Site Settings** - Update the **Homepage Header Title** (e.g., change "Christmas 2025" to "Family Reunion") directly from the dashboard.
+- **Theme Customizer** - Admins can update site colors, header titles, style banners, and presets directly from the dashboard.
+- **Admin Dashboard** - Complete management suite to create, edit, or remove users and wishlists.
 
-## 🏗️ Architecture
+## Tech Stack
 
-**Backend**: Spring Boot (Java 17) → Render  
-**Frontend**: Vite + ReactJS → Vercel  
-**Database**: MySQL → Railway  
-**Styling**: Tailwind CSS
+**Fullstack**: Next.js 16 (App Router) → Vercel  
+**Database**: SQLite (local) / Turso LibSQL
+**ORM**: Prisma 6  
+**Styling**: Tailwind CSS v4  
 
-## 🚀 Getting Started
+## Getting Started
 
-### Backend Setup
-
-1. Clone the repository
+### 1. Run Locally
 ```bash
-git clone https://github.com/sytrusz/christmas-wishlist
-cd wishlist/backend 
-```
-
-2. Configure `application.properties`
-```properties
-spring.datasource.url=${DATABASE_URL}
-spring.datasource.username=${DB_USERNAME:root}
-spring.datasource.password=${DB_PASSWORD}
-
-USER_PASSWORD=${APP_USER_PASSWORD:user}
-ADMIN_PASSWORD=${APP_ADMIN_PASSWORD:admin}
-
-cors.allowed-origins=${ALLOWED_ORIGINS:http://localhost:5173}
-```
-
-3. Run
-```bash
-./mvnw spring-boot:run
-```
-
-Backend starts on `http://localhost:8080`
-
-### Frontend Setup
-
-1. Navigate to frontend
-```bash
-cd frontend
-```
-
-2. Install dependencies
-```bash
+cd next-app
 npm install
-```
-
-3. Configure `.env`
-```env
-VITE_API_URL=http://localhost:8080/api
-```
-
-4. Run
-```bash
 npm run dev
 ```
 
-Frontend starts on `http://localhost:5173`
+Open [http://localhost:3000](http://localhost:3000)
 
-## 📝 Usage
+### 2. Default Credentials
+- **User password**: `user`
+- **Admin password**: `admin`
 
-### For Users
-1. **Login**: Sign in using the password provided by the host.
+### 3. Visual Database GUI
+```bash
+cd next-app
+npx prisma studio
+```
+Opens Prisma Studio at [http://localhost:5555](http://localhost:5555).
 
-   * **Password**: `user`
-2. **Register Name**: Click **"Register Name"** to add your name.
+---
 
+## Deploy to Vercel + Turso
 
-### For Admin
-1. **Login:**
-   - Toggle the "Login as Admin" switch and enter the admin password.
-3. **Dashboard Controls**
-   - **Users Tab:** Add new family members manually or edit existing profiles.
-   - **Wishlists Tab:** Monitor all active lists and delete specific ones if needed.
-   - **Settings Tab:** Update the **Header Name** of the website globally (e.g., change "Christmas" to "Manito-Manita").
+### 1. Create a Turso Database
+```bash
+# Create the portfolio database
+turso db create wishlist-portfolio
 
-### Creating a Wishlist
-1. Click "Create Wishlist"
-2. Select your name
-3. Add items (name required, description and link optional)
-4. Submit
+# Get connection URL
+turso db show --url wishlist-portfolio
+
+# Generate access token
+turso db tokens create wishlist-portfolio
+```
+
+### 2. Apply Schema & Demo Seed
+From `next-app/`:
+```bash
+cd next-app
+npm run db:push:portfolio   # Creates database tables in Turso
+npm run db:seed:portfolio   # Populates demo users and sample wishlists
+```
+
+### 3. Deploy to Vercel
+1. Import this repository on [Vercel](https://vercel.com).
+2. Under **Configure Project**:
+   - Set **Root Directory** to `next-app`
+   - Set **Project Name** (e.g. `christmas-wishlist-portfolio`)
+3. Add the **Environment Variables**:
+   - `TURSO_DATABASE_URL`: `libsql://wishlist-portfolio-<org>.turso.io`
+   - `TURSO_AUTH_TOKEN`: `<your-turso-auth-token>`
+   - `USER_PASSWORD`: `user`
+   - `ADMIN_PASSWORD`: `admin`
+4. Click **Deploy**.
+
+---
 
 ## 📄 License
 
