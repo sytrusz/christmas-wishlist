@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Next.js build
+.next/
+out/
+build/
+
+# Environment files
+.env
+.env*.local
+!.env.example
+
+# SQLite / database
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+next-env.d.ts

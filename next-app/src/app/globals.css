@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --burgundy: #581825;
+  --burgundy-dark: #43111b;
+  --hunter-green: #1e4d38;
+  --hunter-green-dark: #153a2a;
+  --ivory: #faf7f0;
+  --camel: #ba8c63;
+  --parchment: #f7f3e8;
+
+  --theme-bg: #f7f3e8;
+  --theme-primary: #581825;
+  --theme-primary-hover: #43111b;
+  --theme-secondary: #1e4d38;
+  --theme-secondary-hover: #153a2a;
+  --theme-header-text: #4a1521;
+  --theme-subtitle-text: #6e5d4f;
+  --theme-footer-bg: #144730;
+  --theme-card-border: #c9ae8d;
+}
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #f7f3e8;
+    color: #261e17;
+  }
+}
+
+.font-holiday {
+  font-family: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+}
+
+@layer utilities {
+  /* ── Animations ── */
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    15%, 45%, 75% { transform: translateX(-4px); }
+    30%, 60%, 90% { transform: translateX(4px); }
+  }
+  @keyframes bounce-in {
+    0%   { opacity: 0; transform: scale(0.4); }
+    60%  { transform: scale(1.05); }
+    80%  { transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .animate-spin-slow   { animation: spin-slow 4s linear infinite; }
+  .animate-fade-in     { animation: fade-in 0.4s ease-out both; }
+  .animate-slide-up    { animation: slide-up 0.4s ease-out both; }
+  .animate-shake       { animation: shake 0.45s ease-in-out; }
+  .animate-bounce-in   { animation: bounce-in 0.45s ease-out both; }
+  .animate-bounce-slow { animation: bounce-slow 2.5s ease-in-out infinite; }
+
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-900 { animation-delay: 900ms; }
+
+  /* ── Glass card ── */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  /* ── Shimmer skeleton ── */
+  .shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+}

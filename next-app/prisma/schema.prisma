@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  fullName  String   @unique
+  category  String   // "ADULT" | "KID" | "PET"
+  createdAt DateTime @default(now())
+}
+
+model Wishlist {
+  id         Int            @id @default(autoincrement())
+  ownerName  String
+  uniqueSlug String         @unique
+  note       String?
+  category   String         // "ADULT" | "KID" | "PET"
+  groupNotes String?        // JSON string for group titles & fallback transition notes
+  items      WishlistItem[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model WishlistItem {
+  id          Int      @id @default(autoincrement())
+  itemName    String
+  description String?
+  shopLink    String?
+  groupNumber Int      @default(1)
+  wishlistId  Int
+  wishlist    Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
+model SiteSetting {
+  key   String @id
+  value String
+}
