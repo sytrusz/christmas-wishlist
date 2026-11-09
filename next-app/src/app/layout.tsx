@@ -4,7 +4,7 @@ import { SiteConfigProvider } from '@/context/SiteConfigContext';
 import DemoBanner from '@/components/DemoBanner';
 
 export const metadata: Metadata = {
-  title: '🎁 Christmas Wishlist',
+  title: 'Christmas Wishlist',
   description: 'A web application for Christmas wishlists for family and friends.',
 };
 

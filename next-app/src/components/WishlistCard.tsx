@@ -34,7 +34,13 @@ export default function WishlistCard({ wishlist }: { wishlist: Wishlist }) {
   const categoryObj = config.categories?.find((c) => c.key.toUpperCase() === (wishlist.category || '').toUpperCase());
   const categoryLabel = categoryObj ? `${categoryObj.emoji} ${categoryObj.label}` : wishlist.category;
   const badgeClass = categoryColors[wishlist.category];
-  const groupCount = new Set((wishlist.items || []).map((i) => i.groupNumber || 1)).size;
+  const groupNumbers = Array.from(
+    new Set((wishlist.items || []).map((i) => i.groupNumber || 1))
+  ).sort((a, b) => a - b);
+  const optionsLabel =
+    groupNumbers.length > 1
+      ? `🏷️ Options ${groupNumbers.join(', ')}`
+      : `🏷️ Option ${groupNumbers[0] || 1}`;
 
   return (
     <div
@@ -93,7 +99,7 @@ export default function WishlistCard({ wishlist }: { wishlist: Wishlist }) {
       {/* Footer */}
       <div className="pt-3 border-t border-[#F2ECE1] flex items-center justify-between text-xs">
         <span className="text-[10px] font-medium bg-[#FAF5EE] border border-[#E8DEC9] text-[#7A5B3E] px-2 py-0.5 rounded-md flex items-center gap-1">
-          {groupCount > 1 ? '🏷️ Options 1, 2...' : '👕 Theme Outfit Needs'}
+          {optionsLabel}
         </span>
         <div className="flex items-center gap-3">
           <span className="text-xs text-[#8A7C6E]">{itemCount} {itemCount === 1 ? 'item' : 'items'}</span>

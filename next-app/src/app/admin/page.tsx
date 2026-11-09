@@ -105,9 +105,9 @@ function AdminPageContent() {
       await userAPI.delete(id);
       alert('User deleted successfully');
       fetchUsers();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to delete user');
+      alert(err.response?.data?.error || 'Failed to delete user');
     }
   };
 
@@ -117,9 +117,9 @@ function AdminPageContent() {
       await wishlistAPI.delete(id);
       alert('Wishlist deleted successfully');
       fetchWishlists();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to delete wishlist');
+      alert(err.response?.data?.error || 'Failed to delete wishlist');
     }
   };
 
@@ -152,7 +152,7 @@ function AdminPageContent() {
       handleCancelEdit();
       fetchUsers();
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to save user');
+      alert(err.response?.data?.error || err.response?.data?.message || 'Failed to save user');
     }
   };
 
@@ -291,6 +291,18 @@ function AdminPageContent() {
             </button>
           </div>
         </div>
+
+        {process.env.NEXT_PUBLIC_IS_DEMO_MODE === 'true' && (
+          <div className="mb-8 p-4 rounded-2xl bg-[#FFF9EC] border border-[#E8D4B0] text-[#6E4B1F] text-xs sm:text-sm flex items-start gap-3 shadow-xs">
+            <span className="text-xl shrink-0">🔒</span>
+            <div>
+              <p className="font-bold text-[#543815] mb-0.5">Portfolio Demo Sandbox: Protected Data</p>
+              <p className="leading-relaxed">
+                Default showcase users (<strong>Alex Doe, Sam Smith, Charlie, Buddy</strong>) and their sample wishlists are protected and cannot be edited or deleted. You can freely register new test users, create new wishlists, or adjust theme colors, event titles, and banner settings.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Tab Navigation */}
         <div className="flex gap-2 border-b border-gray-200 pb-3 mb-8 overflow-x-auto">

@@ -7,7 +7,7 @@ export default function DemoBanner() {
 
   return (
     <aside aria-label="Demo notice" className="bg-[#2E1F18] text-[#F3EFE6] px-4 py-2 text-xs md:text-sm text-center font-medium shadow-sm flex items-center justify-center gap-2 border-b border-[#3D2C22]">
-      <span>🧪 <strong>Portfolio Demo Sandbox:</strong> Feel free to test creating wishlists and items. Test data automatically resets after 5 minutes.</span>
+      <span>🧪 <strong>Portfolio Demo Sandbox:</strong> Feel free to test creating wishlists & items (test data auto-resets after 5 mins). Default sample data is protected and cannot be edited or deleted in User or Admin roles.</span>
     </aside>
   );
 }

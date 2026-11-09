@@ -84,13 +84,20 @@ function LoginForm() {
               <div className="absolute bottom-0 -right-8 text-xl animate-spin-slow animation-delay-600">✨</div>
             </div>
 
+            {/* Web Name */}
             <h1
-              className="font-holiday text-3xl font-bold mb-2 transition-colors duration-300"
+              className="font-holiday text-2xl sm:text-3xl font-bold mb-2 transition-colors duration-300 tracking-tight"
               style={{ color: config.colors.primary || '#4A1521' }}
             >
-              {isAdminLogin ? 'Admin Portal' : (config.eventTitle ? `${config.eventTitle} Login` : 'Login')}
+              {config.eventTitle || 'Christmas Wishlist 2026'}
             </h1>
-            <p className="text-[#6E5D4F] text-sm">
+
+            {/* Login Mode Badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#F5EFE6] text-[#7A5B3E] border border-[#E8DEC9] mb-2 shadow-2xs">
+              <span>{isAdminLogin ? 'Admin Login' : 'User Login'}</span>
+            </div>
+
+            <p className="text-[#6E5D4F] text-xs sm:text-sm">
               {isAdminLogin
                 ? 'Enter admin password to manage the system'
                 : 'Enter password to access wishlists'}

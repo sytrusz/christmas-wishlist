@@ -125,9 +125,9 @@ function WishlistDetailPageContent() {
       setIsAddingItem(false);
       setNewItemData({ itemName: '', description: '', shopLink: '', groupNumber: 1 });
       fetchWishlist();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to add item');
+      alert(err.response?.data?.error || 'Failed to add item');
     }
   };
 
@@ -145,8 +145,8 @@ function WishlistDetailPageContent() {
       await wishlistAPI.update(slug, { groupNotes: JSON.stringify(currentConfig) });
       setEditingGroupModal(null);
       fetchWishlist();
-    } catch (err) {
-      alert('Failed to update group guidance');
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Failed to update group guidance');
     }
   };
 
@@ -156,8 +156,8 @@ function WishlistDetailPageContent() {
       try {
         await wishlistAPI.delete(wishlist.id);
         router.push('/');
-      } catch (err) {
-        alert('Failed to delete wishlist');
+      } catch (err: any) {
+        alert(err.response?.data?.error || 'Failed to delete wishlist');
       }
     }
   };
@@ -188,8 +188,8 @@ function WishlistDetailPageContent() {
       setEditingItemId(null);
       setEditingItemData({ itemName: '', description: '', shopLink: '', groupNumber: 1 });
       fetchWishlist();
-    } catch (err) {
-      alert('Failed to update item');
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Failed to update item');
     }
   };
 
@@ -198,8 +198,8 @@ function WishlistDetailPageContent() {
       try {
         await itemAPI.delete(itemId);
         fetchWishlist();
-      } catch (err) {
-        alert('Failed to delete item');
+      } catch (err: any) {
+        alert(err.response?.data?.error || 'Failed to delete item');
       }
     }
   };
@@ -284,6 +284,20 @@ function WishlistDetailPageContent() {
             Delete Wishlist
           </button>
         </div>
+
+        {process.env.NEXT_PUBLIC_IS_DEMO_MODE === 'true' &&
+          (wishlist.uniqueSlug.endsWith('-demo') ||
+            ['alex-doe-demo', 'charlie-demo', 'buddy-demo'].includes(wishlist.uniqueSlug)) && (
+            <div className="mb-5 p-4 rounded-2xl bg-[#FFF9EC] border border-[#E8D4B0] text-[#6E4B1F] text-xs sm:text-sm flex items-start gap-3 shadow-xs">
+              <span className="text-lg shrink-0">🔒</span>
+              <div>
+                <p className="font-bold text-[#543815] mb-0.5">Sample Showcase Wishlist</p>
+                <p className="leading-relaxed">
+                  This default demo wishlist and its items are protected and cannot be modified or deleted. To test adding, editing, or deleting items, feel free to create a new wishlist from the home page!
+                </p>
+              </div>
+            </div>
+          )}
 
         {/* Wishlist Header Card */}
         <div className="bg-white rounded-2xl p-6 md:p-8 mb-5 border border-[#DFD7C7] shadow-sm">
