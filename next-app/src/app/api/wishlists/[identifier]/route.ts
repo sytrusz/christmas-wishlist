@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAuth, unauthorizedResponse } from '@/lib/auth';
+import { isDemoMode, isProtectedDemoWishlist } from '@/lib/demo';
 
 export async function GET(
   request: Request,
@@ -79,6 +80,13 @@ export async function PUT(
       return NextResponse.json({ error: 'Wishlist not found' }, { status: 404 });
     }
 
+    if (isDemoMode() && isProtectedDemoWishlist(wishlist.uniqueSlug)) {
+      return NextResponse.json(
+        { error: 'Default demo wishlists cannot be modified in demo mode.' },
+        { status: 403 }
+      );
+    }
+
     const updated = await db.wishlist.update({
       where: { id: wishlist.id },
       data: {
@@ -128,6 +136,13 @@ export async function DELETE(
 
     if (!wishlist) {
       return NextResponse.json({ error: 'Wishlist not found' }, { status: 404 });
+    }
+
+    if (isDemoMode() && isProtectedDemoWishlist(wishlist.uniqueSlug)) {
+      return NextResponse.json(
+        { error: 'Default demo wishlists cannot be deleted in demo mode.' },
+        { status: 403 }
+      );
     }
 
     await db.wishlist.delete({

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAuth, unauthorizedResponse } from '@/lib/auth';
+import { purgeOldDemoData } from '@/lib/demo';
 import { randomBytes } from 'crypto';
 
 function generateSlug(ownerName: string): string {
@@ -20,6 +21,7 @@ export async function GET(request: Request) {
   }
 
   try {
+    await purgeOldDemoData();
     const wishlists = await db.wishlist.findMany({
       include: {
         items: {
@@ -49,6 +51,7 @@ export async function POST(request: Request) {
   }
 
   try {
+    await purgeOldDemoData();
     const body = await request.json();
     const { ownerName, note, category, items, groupNotes } = body;
 

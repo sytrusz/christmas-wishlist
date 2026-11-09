@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAuth, unauthorizedResponse } from '@/lib/auth';
+import { purgeOldDemoData } from '@/lib/demo';
 
 export async function GET(request: Request) {
   const auth = verifyAuth(request);
@@ -9,6 +10,7 @@ export async function GET(request: Request) {
   }
 
   try {
+    await purgeOldDemoData();
     const users = await db.user.findMany({
       orderBy: { fullName: 'asc' },
     });

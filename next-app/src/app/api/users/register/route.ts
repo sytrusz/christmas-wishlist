@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { purgeOldDemoData } from '@/lib/demo';
 
 export async function POST(request: Request) {
   try {
+    await purgeOldDemoData();
     const body = await request.json();
     const { fullName, category } = body;
 

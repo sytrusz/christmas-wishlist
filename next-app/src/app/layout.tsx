@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { SiteConfigProvider } from '@/context/SiteConfigContext';
+import DemoBanner from '@/components/DemoBanner';
 
 export const metadata: Metadata = {
   title: '🎁 Christmas Wishlist',
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen text-[#261E17] antialiased bg-[#F7F3E8]">
+        <DemoBanner />
         <SiteConfigProvider>
           {children}
         </SiteConfigProvider>

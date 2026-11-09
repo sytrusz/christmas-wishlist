@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAuth, unauthorizedResponse } from '@/lib/auth';
+import { isDemoMode, isProtectedDemoWishlist } from '@/lib/demo';
 
 export async function POST(
   request: Request,
@@ -32,6 +33,13 @@ export async function POST(
 
     if (!wishlist) {
       return NextResponse.json({ error: 'Wishlist not found' }, { status: 404 });
+    }
+
+    if (isDemoMode() && isProtectedDemoWishlist(wishlist.uniqueSlug)) {
+      return NextResponse.json(
+        { error: 'Cannot add items to default demo wishlists in demo mode.' },
+        { status: 403 }
+      );
     }
 
     const item = await db.wishlistItem.create({

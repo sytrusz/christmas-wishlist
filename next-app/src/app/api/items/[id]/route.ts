@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAuth, unauthorizedResponse } from '@/lib/auth';
+import { isDemoMode, isProtectedDemoWishlist } from '@/lib/demo';
 
 export async function PUT(
   request: Request,
@@ -16,6 +17,19 @@ export async function PUT(
     const itemId = parseInt(id, 10);
     if (isNaN(itemId)) {
       return NextResponse.json({ error: 'Invalid item ID' }, { status: 400 });
+    }
+
+    if (isDemoMode()) {
+      const existing = await db.wishlistItem.findUnique({
+        where: { id: itemId },
+        include: { wishlist: true },
+      });
+      if (existing && isProtectedDemoWishlist(existing.wishlist.uniqueSlug)) {
+        return NextResponse.json(
+          { error: 'Default demo items cannot be modified in demo mode.' },
+          { status: 403 }
+        );
+      }
     }
 
     const body = await request.json();
@@ -52,6 +66,19 @@ export async function DELETE(
     const itemId = parseInt(id, 10);
     if (isNaN(itemId)) {
       return NextResponse.json({ error: 'Invalid item ID' }, { status: 400 });
+    }
+
+    if (isDemoMode()) {
+      const existing = await db.wishlistItem.findUnique({
+        where: { id: itemId },
+        include: { wishlist: true },
+      });
+      if (existing && isProtectedDemoWishlist(existing.wishlist.uniqueSlug)) {
+        return NextResponse.json(
+          { error: 'Default demo items cannot be deleted in demo mode.' },
+          { status: 403 }
+        );
+      }
     }
 
     await db.wishlistItem.delete({

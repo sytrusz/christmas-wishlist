@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAuth, unauthorizedResponse } from '@/lib/auth';
+import { isDemoMode, isProtectedDemoUser } from '@/lib/demo';
 
 export async function PUT(
   request: Request,
@@ -16,6 +17,16 @@ export async function PUT(
     const userId = parseInt(id, 10);
     if (isNaN(userId)) {
       return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+    }
+
+    if (isDemoMode()) {
+      const existing = await db.user.findUnique({ where: { id: userId } });
+      if (existing && isProtectedDemoUser(existing.fullName)) {
+        return NextResponse.json(
+          { error: 'Default demo users cannot be modified or deleted in demo mode.' },
+          { status: 403 }
+        );
+      }
     }
 
     const body = await request.json();
@@ -50,6 +61,16 @@ export async function DELETE(
     const userId = parseInt(id, 10);
     if (isNaN(userId)) {
       return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+    }
+
+    if (isDemoMode()) {
+      const existing = await db.user.findUnique({ where: { id: userId } });
+      if (existing && isProtectedDemoUser(existing.fullName)) {
+        return NextResponse.json(
+          { error: 'Default demo users cannot be modified or deleted in demo mode.' },
+          { status: 403 }
+        );
+      }
     }
 
     await db.user.delete({
